@@ -1,0 +1,27 @@
+name: 🚀 Deploy to Staging
+on:
+  push:
+    branches: [ "test" ]
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    name: 🎉 Deploy to Staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v4
+        
+      - name: 📂 Deploy to Staging
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.STAGING_FTP_SERVER }}
+          username: ${{ secrets.STAGING_FTP_USERNAME }}
+          password: ${{ secrets.STAGING_FTP_PASSWORD }}
+          server-dir: /apps/staging.${{ secrets.CLIENT_DOMAIN }}/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.env
+            **/.env.*
